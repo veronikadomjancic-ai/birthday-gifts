@@ -5,24 +5,179 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sretan 30. rođendan!</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #fff8e1; margin:0; padding:20px;}
-    h1 { color: #ff5722; margin-bottom: 20px;}
-    .gallery { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
-    .gallery img { width:150px; height:150px; object-fit:cover; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-    p { margin-top:20px; font-size:1.2em; color:#555;}
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #fff8e1;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 { 
+      color: #ff5722; 
+      margin-bottom: 10px; 
+    }
+
+    .intro-text {
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      font-size: 1.2em;
+      color: #555;
+      font-style: italic;
+    }
+
+    .slideshow-container { 
+      position: relative; 
+      max-width: 500px; 
+      margin: auto; 
+    }
+
+    .slides { 
+      display: none; 
+      width: 100%; 
+      border-radius: 10px; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .prev, .next { 
+      cursor: pointer; 
+      position: absolute; 
+      top: 50%; 
+      padding: 10px; 
+      margin-top: -25px; 
+      color: white; 
+      font-weight: bold; 
+      font-size: 18px; 
+      border-radius: 3px; 
+      user-select: none; 
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .prev { left: 0; } 
+    .next { right: 0; }
+
+    .prev:hover, .next:hover { 
+      background-color: rgba(0,0,0,0.8); 
+    }
+
+    .closing-text {
+      margin-top: 40px;
+      font-size: 1.2em;
+      color: #444;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6em;
+    }
+
+    /* Password overlay */
+    #passwordOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      z-index: 1000;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #passwordOverlay input[type="password"] {
+      padding: 10px; 
+      font-size: 16px; 
+      border-radius: 5px; 
+      border: none; 
+      margin-bottom: 10px;
+    }
+
+    #passwordOverlay button {
+      padding: 10px 20px; 
+      font-size: 16px; 
+      border-radius: 5px; 
+      border: none; 
+      cursor: pointer;
+      background-color: #ff5722; 
+      color: white;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Sretan 30. rođendan, Ana!</h1>
-  
-  <div class="gallery">
-    <img src="photos/1.jpg" alt="Godina 1">
-    <img src="photos/2.jpg" alt="Godina 2">
-    
+  <div id="passwordOverlay">
+    <h2>Unesi lozinku za pristup poklonu:</h2>
+    <input type="password" id="pwInput" placeholder="Lozinka">
+    <button onclick="checkPassword()">Otvori</button>
+    <p id="errorMsg" style="color: #ff6666; margin-top:10px;"></p>
   </div>
 
-  <p>Nadam se da ti je ova 30. godina života puna sreće i nezaboravnih trenutaka! 🎉</p>
+  <h1>Sretan 30. rođendan, Marija!</h1>
+
+  <p class="intro-text">
+    Možda ti je rođendan svake prijestupne godine,<br>
+    ali svaka godina je bila kadar vrijedan pamćenja.
+  </p>
+
+  <div class="slideshow-container">
+    <!-- 30 slika -->
+    <img class="slides" src="photos/1.jpg">
+    <img class="slides" src="photos/2.jpg">
+
+
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  </div>
+
+  <p class="closing-text">
+    Kažu da slike govore više od riječi…<br><br>
+    Zato neka ti ovih 30 uspomena pokaže koliko je tvoj život već sada priča vrijedna divljenja.<br><br>
+    <strong>Sretan ti 30. rođendan —</strong><br>
+    i neka ti svaka iduća godina bude puna ovakvih, još ljepših trenutaka.
+  </p>
+
+  <script>
+    const correctPassword = "rođendan30";
+    const overlay = document.getElementById("passwordOverlay");
+    const errorMsg = document.getElementById("errorMsg");
+
+    function checkPassword() {
+      const input = document.getElementById("pwInput").value;
+      if(input === correctPassword) {
+        overlay.style.display = "none";
+        autoSlides();
+      } else {
+        errorMsg.textContent = "Pogrešna lozinka! Pokušaj ponovno.";
+      }
+    }
+
+    let slideIndex = 1;
+    const slides = document.getElementsByClassName("slides");
+    let slideTimer;
+
+    function showSlides(n) {
+      if(n > slides.length) { slideIndex = 1; }
+      if(n < 1) { slideIndex = slides.length; }
+      for(let i=0;i<slides.length;i++){ slides[i].style.display="none"; }
+      slides[slideIndex-1].style.display="block";
+    }
+
+    function plusSlides(n) {
+      clearTimeout(slideTimer);
+      showSlides(slideIndex += n);
+    }
+
+    function autoSlides() {
+      slideIndex++;
+      if(slideIndex > slides.length) slideIndex = 1;
+      showSlides(slideIndex);
+      slideTimer = setTimeout(autoSlides, 3000);
+    }
+
+    showSlides(slideIndex);
+  </script>
 
 </body>
 </html>
